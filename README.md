@@ -22,6 +22,6 @@
 
   1. Run application server
 
-    bin/rails s -b 0.0.0.0
+    bin/rails s
 
   2. Visit http://localhost:3000/debug
