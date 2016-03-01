@@ -133,6 +133,14 @@ class WinDetector
         head: head.dup, tiles: tiles.dup, sequences: sequences.dup, triplets: triplets.dup
       )
     end
+
+    def eql?(other)
+      @head == other.head && @tiles == other.tiles && @sequences == other.sequences && @triplets == other.triplets
+    end
+
+    def hash
+      [@head, @tiles, @sequences, @triplets].hash
+    end
   end
 
   class << self
