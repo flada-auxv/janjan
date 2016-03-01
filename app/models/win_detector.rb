@@ -88,9 +88,9 @@ class WinDetector
 
     def initialize(head:, tiles:, sequences: [], triplets: [])
       @head      = head
-      @sequences = sequences
-      @triplets  = triplets
-      @tiles     = tiles
+      @sequences = sequences.sort
+      @triplets  = triplets.sort
+      @tiles     = tiles.sort
     end
 
     def triplet?(tile)
@@ -107,7 +107,7 @@ class WinDetector
     end
 
     def extract_triplet(tile)
-      @triplets << @tiles.slice!(@tiles.index(tile), 3)
+      @triplets.push(@tiles.slice!(@tiles.index(tile), 3)).sort!
 
       self
     end
@@ -123,7 +123,7 @@ class WinDetector
         @tiles.delete_at(@tiles.index(t))
       end
 
-      @sequences << sequence
+      @sequences.push(sequence).sort!
 
       self
     end
@@ -173,8 +173,8 @@ class WinDetector
       Hand.new(head: head, tiles: tiles_except_head(head))
     }
 
-    hands.each.with_object([]) {|hand, combinations|
-      combinations.push(*detect(hand))
+    hands.each.with_object(Set.new) {|hand, combinations|
+      detect(hand, combinations)
     }
   end
 
@@ -195,16 +195,16 @@ class WinDetector
     tiles
   end
 
-  def detect(hand)
-    return [hand] if hand.tiles.empty?
+  def detect(hand, combinations)
+    return combinations.add(hand) if hand.tiles.empty?
 
     hand.tiles.uniq.each.with_object([]) do |tile, hands|
       if hand.triplet?(tile)
-        hands.push(*detect(hand.dup.extract_triplet(tile)))
+        detect(hand.dup.extract_triplet(tile), combinations)
       end
 
       if hand.sequence?(tile)
-        hands.push(*detect(hand.dup.extract_sequence(tile)))
+        detect(hand.dup.extract_sequence(tile), combinations)
       end
     end
   end
