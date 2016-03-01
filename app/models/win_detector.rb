@@ -161,13 +161,13 @@ class WinDetector
   end
 
   def winning_hands
-    hands = heads.map do |head|
+    hands = heads.map {|head|
       Hand.new(head: head, tiles: tiles_except_head(head))
-    end
+    }
 
-    hands.each.with_object([]) do |hand, combinations|
+    hands.each.with_object([]) {|hand, combinations|
       combinations.push(*detect(hand))
-    end
+    }
   end
 
   def win?
