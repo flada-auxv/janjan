@@ -160,14 +160,18 @@ class WinDetector
     @tiles = tiles.map {|tile| Tile.for(tile) }.sort
   end
 
-  def win?
+  def winning_hands
     hands = heads.map do |head|
       Hand.new(head: head, tiles: tiles_except_head(head))
     end
 
     hands.each.with_object([]) do |hand, combinations|
       combinations.push(*detect(hand))
-    end.any?
+    end
+  end
+
+  def win?
+    winning_hands.any?
   end
 
   private
