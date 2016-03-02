@@ -198,7 +198,7 @@ class WinDetector
   def detect(hand, combinations)
     return combinations.add(hand) if hand.tiles.empty?
 
-    hand.tiles.uniq.each.with_object([]) do |tile, hands|
+    hand.tiles.uniq.each do |tile|
       if hand.triplet?(tile)
         detect(hand.dup.extract_triplet(tile), combinations)
       end
